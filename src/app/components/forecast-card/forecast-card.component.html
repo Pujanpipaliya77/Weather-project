@@ -1,0 +1,65 @@
+<div class="space-y-4">
+  <div class="flex items-center justify-between">
+    <h3 class="text-xl font-bold text-white tracking-tight">7-Day Extended Forecast</h3>
+    <span class="text-xs text-sky-200/50">Includes extrapolated days 6 & 7</span>
+  </div>
+
+  <!-- Responsive Layout: Grid on larger screens, scrollable list on mobile -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+    <div 
+      *ngFor="let day of forecastList"
+      class="bg-slate-900/40 backdrop-blur-md rounded-2xl p-5 border shadow-md flex flex-col justify-between items-center text-center transition-all duration-300 hover:-translate-y-1 hover:bg-slate-900/60 hover:shadow-lg"
+      [ngClass]="day.isExtrapolated ? 'border-amber-500/30 bg-amber-500/5' : 'border-white/10'"
+    >
+      
+      <!-- Day Header -->
+      <div>
+        <p class="text-sm font-bold text-white tracking-wide" [class.text-sky-400]="day.dayName === 'Today'">
+          {{ day.dayName }}
+        </p>
+        <p class="text-xs text-sky-200/60 font-medium mt-0.5">{{ day.date }}</p>
+      </div>
+
+      <!-- Icon -->
+      <div class="my-3 relative">
+        <img 
+          [src]="'https://openweathermap.org/img/wn/' + day.weatherIcon + '@2x.png'" 
+          [alt]="day.weatherDesc"
+          class="w-14 h-14 select-none drop-shadow-sm"
+        />
+        <!-- Extrapolated Badge -->
+        <span 
+          *ngIf="day.isExtrapolated" 
+          class="absolute -top-1 -right-1 bg-amber-500 text-[9px] text-slate-950 font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider"
+          title="Extrapolated using recent forecast trends"
+        >
+          Ext
+        </span>
+      </div>
+
+      <!-- Temp & Stats -->
+      <div class="w-full space-y-3">
+        <div>
+          <p class="text-2xl font-black text-white tracking-tight">{{ day.tempAvg }}°</p>
+          <p class="text-xs text-white/50 font-medium mt-0.5">{{ day.tempMax }}° / {{ day.tempMin }}°</p>
+        </div>
+        
+        <!-- Detailed metrics per day -->
+        <div class="pt-2 border-t border-white/5 grid grid-cols-2 gap-1 text-[10px] text-sky-100/60 font-semibold uppercase tracking-wider">
+          <div class="flex flex-col items-center">
+            <span>Hum</span>
+            <span class="font-bold text-white text-xs mt-0.5">{{ day.humidityAvg }}%</span>
+          </div>
+          <div class="flex flex-col items-center">
+            <span>Wind</span>
+            <span class="font-bold text-white text-xs mt-0.5">{{ day.windSpeedAvg }}m/s</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
