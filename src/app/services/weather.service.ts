@@ -20,6 +20,8 @@ export interface DailyForecast {
 export interface WeatherData {
   city: string;
   country: string;
+  lat: number;
+  lon: number;
   temp: number;
   feelsLike: number;
   tempMin: number;
@@ -136,6 +138,8 @@ export class WeatherService {
     return {
       city: currentRaw.name,
       country: currentRaw.sys.country,
+      lat: currentRaw.coord.lat,
+      lon: currentRaw.coord.lon,
       temp: Math.round(currentRaw.main.temp),
       feelsLike: Math.round(currentRaw.main.feels_like),
       tempMin: Math.round(currentRaw.main.temp_min),
@@ -196,6 +200,13 @@ export class WeatherService {
       const midIndex = Math.floor(count / 2);
       const midItem = items[midIndex];
       
+      // Prefer daytime icons (ending in 'd') for daily forecast representations
+      let selectedItem = midItem;
+      const daytimeItem = items.find(item => item.weather[0].icon.endsWith('d'));
+      if (daytimeItem) {
+        selectedItem = daytimeItem;
+      }
+      
       const dateObj = new Date(dateStr + 'T00:00:00');
       const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
       const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -209,8 +220,8 @@ export class WeatherService {
         tempMax: Math.round(maxTemp),
         humidityAvg: Math.round(humidityAvg),
         windSpeedAvg: parseFloat(windSpeedAvg.toFixed(1)),
-        weatherIcon: midItem.weather[0].icon,
-        weatherDesc: midItem.weather[0].description,
+        weatherIcon: selectedItem.weather[0].icon,
+        weatherDesc: selectedItem.weather[0].description,
         isExtrapolated: false
       });
     });
@@ -331,6 +342,8 @@ export class WeatherService {
     return {
       city: city.charAt(0).toUpperCase() + city.slice(1),
       country: 'IN',
+      lat: 12.9716,
+      lon: 77.5946,
       temp: baseTemp,
       feelsLike: baseTemp + 1,
       tempMin: baseTemp - 2,

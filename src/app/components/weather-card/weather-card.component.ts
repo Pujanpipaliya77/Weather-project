@@ -38,5 +38,15 @@ export class WeatherCardComponent {
     const index = Math.round(((deg %= 360) < 0 ? deg + 360 : deg) / 45) % 8;
     return directions[index];
   }
+
+  isDaytime(): boolean {
+    if (!this.weatherData) return true;
+    return this.weatherData.icon.endsWith('d');
+  }
+
+  isClearSky(): boolean {
+    if (!this.weatherData) return false;
+    return this.weatherData.mainCondition.toLowerCase() === 'clear';
+  }
 }
 

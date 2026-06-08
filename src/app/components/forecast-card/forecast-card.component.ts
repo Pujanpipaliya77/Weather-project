@@ -11,5 +11,13 @@ import { DailyForecast } from '../../services/weather.service';
 })
 export class ForecastCardComponent {
   @Input() forecastList: DailyForecast[] = [];
+
+  isDaytime(icon: string): boolean {
+    return icon.endsWith('d');
+  }
+
+  isClearSky(icon: string): boolean {
+    return icon.startsWith('01');
+  }
 }
 
